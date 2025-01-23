@@ -38,6 +38,12 @@ jobs:
 
       # Install or Upgrade Helm Chart
       - name: Deploy with Helm
+        # run: |
+        #   helm upgrade --install todo-app ./todo-app \
+        #     --set image.repository=27099817/todo-app \
+        #     --set image.tag=latest \
+        #     --namespace default \
+        #     --create-namespace
         run: |
           helm upgrade --install todo-app ./todo-app \
             --set image.repository=27099817/todo-app \
