@@ -1,4 +1,57 @@
-name: Deploy to EKS with Helm
+# name: Deploy to EKS with Helm
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # Checkout the repository
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+
+#       # Log in to Docker Hub
+#       - name: Log in to Docker Hub
+#         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+#       # Build and push Docker image
+#       - name: Build and Push Docker Image
+#         run: |
+#           docker build -t 27099817/todo-app:latest .
+#           docker push 27099817/todo-app:latest
+
+#       # Configure AWS CLI
+#       - name: Configure AWS
+#         uses: aws-actions/configure-aws-credentials@v3
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-1
+
+#       # Update Kubeconfig
+#       - name: Update Kubeconfig
+#         run: aws eks update-kubeconfig --region us-east-1 --name todo-app-cluster
+
+#       # Install or Upgrade Helm Chart
+#       - name: Deploy with Helm
+#         # run: |
+#         #   helm upgrade --install todo-app ./todo-app \
+#         #     --set image.repository=27099817/todo-app \
+#         #     --set image.tag=latest \
+#         #     --namespace default \
+#         #     --create-namespace
+#         run: |
+#           helm upgrade --install todo-app ./todo-app \
+#             --set image.repository=27099817/todo-app \
+#             --set image.tag=latest \
+#             --namespace default \
+#             --create-namespace
+
+name: Deploy to EKS
 
 on:
   push:
@@ -6,15 +59,15 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses:
+          actions/checkout@v2
 
-      # Log in to Docker Hub
+          # Log in to Docker Hub
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
@@ -24,26 +77,28 @@ jobs:
           docker build -t 27099817/todo-app:latest .
           docker push 27099817/todo-app:latest
 
-      # Configure AWS CLI
-      - name: Configure AWS
-        uses: aws-actions/configure-aws-credentials@v3
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Update Kubeconfig
-      - name: Update Kubeconfig
-        run: aws eks update-kubeconfig --region us-east-1 --name todo-app-cluster
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-      # Install or Upgrade Helm Chart
+      - name: Set up kubectl
+        run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+      - name: Configure kubectl for EKS
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name todo-app-cluster
+
       - name: Deploy with Helm
-        # run: |
-        #   helm upgrade --install todo-app ./todo-app \
-        #     --set image.repository=27099817/todo-app \
-        #     --set image.tag=latest \
-        #     --namespace default \
-        #     --create-namespace
         run: |
           helm upgrade --install todo-app ./todo-app \
             --set image.repository=27099817/todo-app \
