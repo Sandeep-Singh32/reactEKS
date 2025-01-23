@@ -51,4 +51,4 @@ jobs:
             --set image.repository=27099817/todo-app \
             --set image.tag=latest \
             --namespace default \
-            --create-namespace
+            --create-namespace --force
