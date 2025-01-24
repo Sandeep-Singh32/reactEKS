@@ -5,4 +5,4 @@ metadata:
   labels:
     app: todo-app-web
 data: 
-  VITE_REACT_APP_BASE_URL: "http://sandeep-piyasi.com"
+  VITE_REACT_APP_BASE_URL: "http://a3b92c1b26a1f488d9aadf397b15c25e-410735805.us-east-1.elb.amazonaws.com"
