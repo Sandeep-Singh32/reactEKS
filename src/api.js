@@ -3,7 +3,9 @@ const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 export const fetchTasks = async () => {
   try {
+    const envs = process.env;
     console.log("fetch tasks ..", BASE_URL);
+    console.log("envs ", envs);
     const response = await fetch(BASE_URL + "/todo");
     if (!response.ok) throw new Error("Failed to fetch tasks");
     return await response.json();
