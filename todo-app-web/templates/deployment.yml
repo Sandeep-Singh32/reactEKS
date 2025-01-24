@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-app
+  name: todo-app-web
   labels:
-    app: todo-app
+    app: todo-app-web
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: todo-app
+      app: todo-app-web
   template:
     metadata:
       labels:
-        app: todo-app
+        app: todo-app-web
     spec:
       containers:
-        - name: todo-app
+        - name: todo-app-web
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 3000
-          env:
-            - name: NODE_ENV
-              value: "production"
+          envFrom: 
+            - configMapRef:
+                name: todo-app-web-config
  

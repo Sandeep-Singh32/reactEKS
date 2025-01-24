@@ -1,0 +1,8 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: todo-app-web-config
+  labels:
+    app: todo-app-web
+data: 
+  VITE_REACT_APP_BASE_URL: "http://sandeep-piyasi.com"

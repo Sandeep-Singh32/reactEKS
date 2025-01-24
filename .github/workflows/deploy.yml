@@ -27,8 +27,8 @@ jobs:
       # Build and push Docker image
       - name: Build and Push Docker Image
         run: |
-          docker build -t 27099817/todo-app:${{ env.IMAGE_TAG }} .
-          docker push 27099817/todo-app:${{ env.IMAGE_TAG }}
+          docker build -t 27099817/todo-app-web:${{ env.IMAGE_TAG }} .
+          docker push 27099817/todo-app-web:${{ env.IMAGE_TAG }}
 
       # Set up AWS CLI
       - name: Set up AWS CLI
@@ -58,8 +58,8 @@ jobs:
       # Deploy with Helm
       - name: Deploy with Helm
         run: |
-          helm upgrade --install todo-app ./todo-app \
-            --set image.repository=27099817/todo-app \
+          helm upgrade --install todo-app-web ./todo-app-web \
+            --set image.repository=27099817/todo-app-web \
             --set image.tag=${{ env.IMAGE_TAG }} \
             --namespace default \
             --create-namespace
