@@ -1,11 +1,17 @@
 // require('dotenv').config();
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+let BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+if (!BASE_URL) {
+  console.log("No VITE_REACT_APP_BASE_URL found in.env, using default URL");
+  BASE_URL =
+    "http://a3b92c1b26a1f488d9aadf397b15c25e-410735805.us-east-1.elb.amazonaws.com";
+}
 
 export const fetchTasks = async () => {
   try {
-    const envs = process.env;
+    const envs = process.env.VITE_REACT_APP_BASE_URL;
     console.log("fetch tasks ..", BASE_URL);
-    console.log("envs ", envs);
+    console.log("envs ", envs, " --------");
+
     const response = await fetch(BASE_URL + "/todo");
     if (!response.ok) throw new Error("Failed to fetch tasks");
     return await response.json();
