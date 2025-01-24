@@ -3,6 +3,7 @@ const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 export const fetchTasks = async () => {
   try {
+    console.log("fetch tasks ..", BASE_URL);
     const response = await fetch(BASE_URL + "/todo");
     if (!response.ok) throw new Error("Failed to fetch tasks");
     return await response.json();
@@ -14,6 +15,7 @@ export const fetchTasks = async () => {
 
 export const createTask = async (task) => {
   try {
+    console.log("createTask tasks ..", BASE_URL, "-----", task);
     const response = await fetch(BASE_URL + "/todo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -29,6 +31,7 @@ export const createTask = async (task) => {
 
 export const updateTask = async (id, updatedTask) => {
   try {
+    console.log("updateTask tasks ..", BASE_URL, "---", updatedTask);
     const response = await fetch(`${BASE_URL + "/todo"}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -44,6 +47,7 @@ export const updateTask = async (id, updatedTask) => {
 
 export const deleteTask = async (id) => {
   try {
+    console.log("delete tasks ..", BASE_URL, "---", id);
     const response = await fetch(`${BASE_URL + "/todo"}/${id}`, {
       method: "DELETE",
     });
